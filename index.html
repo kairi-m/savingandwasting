@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>節約/浪費ログ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>節約/浪費ログ</h1>
+        
+        <div class="description-container">
+            <div class="description-section">
+                <h2>このアプリについて</h2>
+                <p>日々の生活の中で「お金を節約できたシーン」「つい浪費してしまったシーン」を簡単に記録・振り返りできるサービスです。</p>
+                <p>節約のみ、浪費のみ、両方の合計金額を表示し、あなたの金銭感覚を可視化します。</p>
+            </div>
+
+            <div class="description-section">
+                <h2>使い方</h2>
+                <div class="example-container">
+                    <div class="example-section">
+                        <h3>節約の例</h3>
+                        <ul>
+                            <li>
+                                <span class="example-title">水筒を持参</span>
+                                <p>コンビニでの買い物を節約するために、自分で水筒を持って行く</p>
+                            </li>
+                            <li>
+                                <span class="example-title">定食の選択</span>
+                                <p>普段は600円の定食を選んでいたところを、500円の定食にした</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="example-section">
+                        <h3>浪費の例</h3>
+                        <ul>
+                            <li>
+                                <span class="example-title">コンビニでの買い物</span>
+                                <p>コンビニでの買い物を浪費するために、コンビニでの買い物をする</p>
+                            </li>
+                            <li>
+                                <span class="example-title">ディナーの選択</span>
+                                <p>普段は1000円のディナーを選んでいたところを、1500円のディナーにした</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h2>記録のメリット</h2>
+                <ul class="benefits-list">
+                    <li>日常の些細な節約・浪費を記録することで、自身の金銭感覚を把握できます</li>
+                    <li>節約・浪費の傾向を見つけることで、より効果的な節約方法を見つけることができます</li>
+                    <li>グラフで可視化することで、自分の行動パターンを客観的に分析できます</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 登録フォーム -->
+        <div class="form-container">
+            <form id="logForm">
+                <div class="form-group">
+                    <label>種類：</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="type" value="saving" checked>
+                            節約
+                        </label>
+                        <label>
+                            <input type="radio" name="type" value="waste">
+                            浪費
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">金額（円）：</label>
+                    <input type="number" id="amount" name="amount" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="note">内容：</label>
+                    <textarea id="note" name="note" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">記録する</button>
+            </form>
+        </div>
+
+        <!-- 統計情報 -->
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>節約合計</h3>
+                <p id="totalSaving">0円</p>
+            </div>
+            <div class="stat-item">
+                <h3>浪費合計</h3>
+                <p id="totalWaste">0円</p>
+            </div>
+            <div class="stat-item">
+                <h3>差額</h3>
+                <p id="difference">0円</p>
+            </div>
+        </div>
+
+        <!-- グラフ -->
+        <div class="chart-container">
+            <div class="chart-row">
+                <div class="chart-item">
+                    <canvas id="moneyChart"></canvas>
+                </div>
+                <div class="chart-item">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- フィルター -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">すべて</button>
+            <button class="filter-btn" data-filter="saving">節約のみ</button>
+            <button class="filter-btn" data-filter="waste">浪費のみ</button>
+        </div>
+
+        <!-- ログ一覧 -->
+        <div id="logList" class="log-list"></div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html> 
