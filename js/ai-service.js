@@ -1,6 +1,6 @@
 class AIService {
   constructor() {
-    this.API_BASE_URL = 'http://localhost:3001';
+    this.API_BASE_URL = 'https://openai-proxy-server-w980.onrender.com';
   }
 
   async analyzeLog(log) {
