@@ -2,12 +2,14 @@ class App {
     constructor() {
         this.storage = new Storage();
         this.chartManager = new ChartManager(this.storage);
+        this.aiService = new AIService();
         this.currentFilter = 'all';
         this.editingLogId = null;
         this.selectedBeforeEmotion = null;
         this.selectedAfterEmotion = null;
 
         this.initializeEventListeners();
+        this.initializeAI();
         this.render();
     }
 
@@ -57,7 +59,7 @@ class App {
         }
     }
 
-    handleFormSubmit() {
+    async handleFormSubmit() {
         const form = document.getElementById('logForm');
         const formData = new FormData(form);
         
@@ -83,6 +85,16 @@ class App {
             afterEmotion: this.selectedAfterEmotion,
             situations: situations
         };
+
+        // AI分析の実行
+        try {
+            const analysis = await this.aiService.analyzeLog(logData);
+            logData.message = analysis.reflection;
+            logData.suggestion = analysis.suggestion;
+            logData.encouragement = analysis.encouragement;
+        } catch (error) {
+            console.error('AI分析エラー:', error);
+        }
 
         if (this.editingLogId) {
             this.storage.updateLog(this.editingLogId, logData);
@@ -203,14 +215,17 @@ class App {
         logList.innerHTML = logs.map(log => `
             <div class="log-item ${log.type}">
                 <div class="log-content">
-                    <div class="log-date">日付: ${this.formatDate(log.date)}</div>
-                    <div class="log-amount">金額: ${this.formatAmount(log.amount)}</div>
-                    ${log.beforeEmotion && log.afterEmotion ? `
-                        <div class="log-emotions">
-                            <div class="emotion-before">選択前: ${this.getEmotionEmoji(log.beforeEmotion)}</div>
-                            <div class="emotion-after">選択後: ${this.getEmotionEmoji(log.afterEmotion)}</div>
-                        </div>
-                    ` : ''}
+                    <div class="log-header">
+                        <span class="log-date">${this.formatDate(log.date)}</span>
+                        <span class="log-amount">金額: ${this.formatAmount(log.amount)}</span>
+                    </div>
+                    <div class="log-meta">
+                        <span class="log-type">${log.type === 'saving' ? '節約' : '浪費'}</span>
+                        <span class="log-emotions">
+                            <span>選択前: ${this.getEmotionEmoji(log.beforeEmotion, 'before')}</span>
+                            <span>→ 選択後: ${this.getEmotionEmoji(log.afterEmotion, 'after')}</span>
+                        </span>
+                    </div>
                     ${log.situations && log.situations.length > 0 ? `
                         <div class="log-situations">
                             シチュエーション: ${log.situations.map(situation => `
@@ -219,7 +234,14 @@ class App {
                         </div>
                     ` : ''}
                     <div class="log-note">メモ: ${log.note}</div>
-                    ${log.message ? `<div class="log-message">振り返り: ${log.message}</div>` : ''}
+                    ${log.message ? `<div class="log-future-message">未来の自分へのメッセージ: ${log.message}</div>` : ''}
+                    ${(log.reflection || log.suggestion || log.encouragement) ? `
+                        <div class="log-ai-analysis">
+                            ${log.reflection ? `<div class="ai-reflection">振り返り: ${log.reflection}</div>` : ''}
+                            ${log.suggestion ? `<div class="ai-suggestion">改善提案: ${log.suggestion}</div>` : ''}
+                            ${log.encouragement ? `<div class="ai-encouragement">励まし: ${log.encouragement}</div>` : ''}
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="log-actions">
                     <button class="edit-btn" onclick="app.handleEdit('${log.id}')">編集</button>
@@ -229,19 +251,29 @@ class App {
         `).join('');
     }
 
-    getEmotionEmoji(emotion) {
-        const emojis = {
-            happy: { emoji: '😊', text: '満足' },
-            stressed: { emoji: '😤', text: 'ストレス' },
-            tired: { emoji: '😫', text: '疲労' },
-            excited: { emoji: '🤩', text: '興奮' },
-            normal: { emoji: '😐', text: '普通' },
-            regret: { emoji: '😔', text: '後悔' },
-            relief: { emoji: '😌', text: '安心' },
-            guilty: { emoji: '😣', text: '罪悪感' }
-        };
-        const emotionData = emojis[emotion] || { emoji: '😐', text: '普通' };
-        return `${emotionData.text}${emotionData.emoji}`;
+    getEmotionEmoji(emotion, type = 'before') {
+        // type: 'before' or 'after'
+        if (type === 'before') {
+            const emojis = {
+                happy: { emoji: '😊', text: '確信' },
+                stressed: { emoji: '😤', text: 'ストレス' },
+                tired: { emoji: '😫', text: '疲労' },
+                excited: { emoji: '🤩', text: '興奮' },
+                normal: { emoji: '😐', text: '何となく' }
+            };
+            const emotionData = emojis[emotion] || { emoji: '😐', text: '何となく' };
+            return `${emotionData.text}${emotionData.emoji}`;
+        } else {
+            const emojis = {
+                happy: { emoji: '😊', text: '満足' },
+                regret: { emoji: '😔', text: '後悔' },
+                relief: { emoji: '😌', text: '安心' },
+                guilty: { emoji: '😣', text: '罪悪感' },
+                normal: { emoji: '😐', text: '普通' }
+            };
+            const emotionData = emojis[emotion] || { emoji: '😐', text: '普通' };
+            return `${emotionData.text}${emotionData.emoji}`;
+        }
     }
 
     getSituationLabel(situation) {
@@ -252,15 +284,58 @@ class App {
             ad: '広告を見た',
             schedule: '予定がズレた',
             hungry: '空腹時',
+            study: '学習時',
             other: 'その他'
         };
         return labels[situation] || situation;
+    }
+
+    initializeAI() {
+        const aiSection = document.createElement('div');
+        aiSection.id = 'aiAnalysis';
+        aiSection.className = 'ai-analysis-section';
+        document.querySelector('.container').appendChild(aiSection);
+    }
+
+    async updateAIAnalysis() {
+        const logs = this.storage.getLogs();
+        const aiSection = document.getElementById('aiAnalysis');
+        
+        try {
+            const analysis = await this.aiService.analyzeTrends(logs);
+            
+            aiSection.innerHTML = `
+                <h2>AI分析</h2>
+                <div class="ai-analysis-content">
+                    <div class="analysis-section">
+                        <h3>傾向分析</h3>
+                        <p>${analysis.trendAnalysis}</p>
+                    </div>
+                    <div class="analysis-section">
+                        <h3>感情パターン</h3>
+                        <p>${analysis.emotionPatterns}</p>
+                    </div>
+                    <div class="analysis-section">
+                        <h3>シチュエーション分析</h3>
+                        <p>${analysis.situationAnalysis}</p>
+                    </div>
+                    <div class="analysis-section">
+                        <h3>改善提案</h3>
+                        <p>${analysis.recommendations}</p>
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            console.error('AI分析更新エラー:', error);
+            aiSection.innerHTML = '<p class="error">AI分析の更新に失敗しました</p>';
+        }
     }
 
     render() {
         this.updateStats();
         this.renderLogs();
         this.chartManager.updateCharts();
+        this.updateAIAnalysis();
     }
 }
 
