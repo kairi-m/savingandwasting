@@ -89,7 +89,7 @@ class App {
         // AI分析の実行
         try {
             const analysis = await this.aiService.analyzeLog(logData);
-            logData.message = analysis.reflection;
+            logData.reflection = analysis.reflection;
             logData.suggestion = analysis.suggestion;
             logData.encouragement = analysis.encouragement;
         } catch (error) {
