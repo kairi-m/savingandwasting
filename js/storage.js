@@ -86,4 +86,26 @@ class Storage {
 
         return weeklyData;
     }
+
+    // 月ごとの集計データ取得
+    getMonthlyStats() {
+        const logs = this.getLogs();
+        const monthlyData = {
+            saving: {},
+            waste: {}
+        };
+
+        logs.forEach(log => {
+            const date = new Date(log.date);
+            const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+            if (log.type === 'saving') {
+                monthlyData.saving[monthKey] = (monthlyData.saving[monthKey] || 0) + (Number(log.amount) || 0);
+            } else {
+                monthlyData.waste[monthKey] = (monthlyData.waste[monthKey] || 0) + (Number(log.amount) || 0);
+            }
+        });
+
+        return monthlyData;
+    }
 } 

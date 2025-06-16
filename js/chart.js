@@ -41,7 +41,7 @@ class ChartManager {
                 plugins: {
                     title: {
                         display: true,
-                        text: '週間の節約・浪費推移'
+                        text: '月別の節約・浪費推移'
                     }
                 }
             }
@@ -75,26 +75,27 @@ class ChartManager {
     }
 
     updateCharts() {
-        // 週間データの更新
-        const weeklyData = this.storage.getWeeklyStats();
-        const weeks = [...new Set([
-            ...Object.keys(weeklyData.saving),
-            ...Object.keys(weeklyData.waste)
+        // 月間データの更新
+        const monthlyData = this.storage.getMonthlyStats();
+        const months = [...new Set([
+            ...Object.keys(monthlyData.saving),
+            ...Object.keys(monthlyData.waste)
         ])].sort();
 
-        const savingData = weeks.map(week => weeklyData.saving[week] || 0);
-        const wasteData = weeks.map(week => weeklyData.waste[week] || 0);
+        const savingData = months.map(month => monthlyData.saving[month] || 0);
+        const wasteData = months.map(month => monthlyData.waste[month] || 0);
 
-        // 日付のフォーマット
-        const formattedWeeks = weeks.map(week => {
-            const date = new Date(week);
-            return `${date.getMonth() + 1}/${date.getDate()}`;
+        // 月のフォーマット（YYYY年MM月）
+        const formattedMonths = months.map(month => {
+            const [year, m] = month.split('-');
+            return `${year}年${m}月`;
         });
 
         // 棒グラフの更新
-        this.barChart.data.labels = formattedWeeks;
+        this.barChart.data.labels = formattedMonths;
         this.barChart.data.datasets[0].data = savingData;
         this.barChart.data.datasets[1].data = wasteData;
+        this.barChart.options.plugins.title.text = '月別の節約・浪費推移';
         this.barChart.update();
 
         // 円グラフの更新
