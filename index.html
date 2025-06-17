@@ -177,15 +177,18 @@
             </div>
         </div>
 
-        <div class="log-filters">
-            <h2>記録一覧</h2>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">すべて</button>
-                <button class="filter-btn" data-filter="saving">節約</button>
-                <button class="filter-btn" data-filter="waste">浪費</button>
+        <div class="log-section">
+            <div class="log-header">
+                <h2>記録一覧</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn" data-filter="all">すべて</button>
+                    <button class="filter-btn" data-filter="saving">節約</button>
+                    <button class="filter-btn" data-filter="waste">浪費</button>
+                    <button id="closeLogSection" class="close-btn active">閉じる</button>
+                </div>
             </div>
+            <div id="logList" class="log-list" style="display: none;"></div>
         </div>
-        <div id="logList" class="log-list"></div>
     </div>
 
     <script src="js/storage.js"></script>

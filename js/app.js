@@ -41,6 +41,12 @@ class App {
                 }
             });
         });
+
+        // 閉じるボタンのイベントリスナー
+        document.getElementById('closeLogSection').addEventListener('click', () => {
+            const logList = document.getElementById('logList');
+            logList.style.display = 'none';
+        });
     }
 
     handleEmotionSelect(type, emotion, button) {
@@ -113,12 +119,17 @@ class App {
     }
 
     handleFilterChange(filter) {
+        // 現在のフィルターを更新
         this.currentFilter = filter;
         
         // フィルターボタンのアクティブ状態を更新
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.filter === filter);
         });
+
+        // 記録一覧を表示
+        const logList = document.getElementById('logList');
+        logList.style.display = 'flex';
 
         // ログ一覧を更新
         this.renderLogs();

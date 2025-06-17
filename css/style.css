@@ -194,24 +194,53 @@ textarea {
 }
 
 .filter-btn {
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 20px;
     background: white;
+    color: #3498db;
     cursor: pointer;
-    font-size: 16px;
     transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .filter-btn:hover {
-    background-color: #f8f9fa;
-    border-color: #3498db;
+    background: #f0f0f0;
 }
 
 .filter-btn.active {
-    background-color: #3498db;
+    background: #3498db;
     color: white;
-    border-color: #3498db;
+}
+
+/* 節約ボタンのスタイル */
+.filter-btn[data-filter="saving"] {
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.filter-btn[data-filter="saving"]:hover {
+    background: #f0f0f0;
+}
+
+.filter-btn[data-filter="saving"].active {
+    background: #4CAF50;
+    color: white;
+}
+
+/* 浪費ボタンのスタイル */
+.filter-btn[data-filter="waste"] {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.filter-btn[data-filter="waste"]:hover {
+    background: #f0f0f0;
+}
+
+.filter-btn[data-filter="waste"].active {
+    background: #e74c3c;
+    color: white;
 }
 
 .stats-container {
@@ -588,27 +617,29 @@ textarea {
 
 .filter-buttons {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
 }
 
 .filter-btn {
-    padding: 6px 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 20px;
     background: white;
-    color: #666;
+    color: #3498db;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .filter-btn:hover {
-    background: #f5f5f5;
+    background: #f0f0f0;
 }
 
 .filter-btn.active {
-    background: #4CAF50;
+    background: #3498db;
     color: white;
-    border-color: #4CAF50;
 }
 
 .filter-btn[data-filter="waste"].active {
@@ -759,4 +790,86 @@ textarea {
     color: #e74c3c;
     text-align: center;
     padding: 10px;
+}
+
+/* 記録一覧セクション */
+.log-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-top: 30px;
+}
+
+.log-header {
+    margin-bottom: 20px;
+}
+
+.log-header h2 {
+    color: #2c3e50;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #3498db;
+    border-radius: 20px;
+    background: white;
+    color: #3498db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.filter-btn:hover {
+    background: #f0f0f0;
+}
+
+.filter-btn.active {
+    background: #3498db;
+    color: white;
+}
+
+.log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.log-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    padding: 8px 16px;
+    border: 1px solid #111111;
+    border-radius: 20px;
+    background: white;
+    color: #111111;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.close-btn:hover {
+    background: #111111;
+    color: white;
+}
+
+.close-btn.active {
+    background: #111111;
+    color: white;
 } 
