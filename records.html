@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記録一覧 - 節約/浪費ログ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="records-header">
+            <h1>記録一覧</h1>
+            <button id="goToHome" class="home-btn">ホームに戻る</button>
+        </div>
+
+        <div class="filter-container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="saving">節約</button>
+                <button class="filter-btn" data-filter="waste">浪費</button>
+            </div>
+        </div>
+
+        <div class="month-filter-container">
+            <label for="monthFilter">月別フィルター：</label>
+            <select id="monthFilter" class="month-select">
+                <option value="all">すべての月</option>
+            </select>
+        </div>
+
+        <div id="logList" class="log-list"></div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/records.js"></script>
+</body>
+</html> 

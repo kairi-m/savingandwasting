@@ -872,4 +872,212 @@ textarea {
 .close-btn.active {
     background: #111111;
     color: white;
+}
+
+/* 記録一覧へボタン */
+.records-button-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.records-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.records-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* 記録一覧ページ用スタイル */
+.records-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.records-header h1 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.home-btn {
+    background-color: #95a5a6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.home-btn:hover {
+    background-color: #7f8c8d;
+}
+
+/* 記録一覧ページのフィルターコンテナ */
+.records-header + .filter-container {
+    margin-top: 0;
+}
+
+/* 記録一覧ページのログリスト */
+.records-header + .filter-container + .log-list {
+    display: block;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .records-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .records-header h1 {
+        font-size: 1.5em;
+    }
+    
+    .records-btn {
+        padding: 12px 24px;
+        font-size: 16px;
+    }
+}
+
+/* 月別フィルター */
+.month-filter-container {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.month-filter-container label {
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.month-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.month-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* 月別グループ */
+.month-group {
+    margin-bottom: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.month-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.month-header h3 {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.month-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+}
+
+.month-saving {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.month-waste {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.month-difference {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.month-logs {
+    padding: 0;
+}
+
+.month-logs .log-item {
+    margin: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.month-logs .log-item:last-child {
+    border-bottom: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .month-filter-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .month-select {
+        min-width: auto;
+    }
+    
+    .month-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .month-stats {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .month-header h3 {
+        font-size: 1.1em;
+    }
 } 

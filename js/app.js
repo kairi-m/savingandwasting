@@ -20,12 +20,9 @@ class App {
             this.handleFormSubmit();
         });
 
-        // フィルターボタン
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const filter = e.target.dataset.filter;
-                this.handleFilterChange(filter);
-            });
+        // 記録一覧へボタン
+        document.getElementById('goToRecords').addEventListener('click', () => {
+            window.location.href = 'records.html';
         });
 
         // 感情ボタン
@@ -42,11 +39,12 @@ class App {
             });
         });
 
-        // 閉じるボタンのイベントリスナー
-        document.getElementById('closeLogSection').addEventListener('click', () => {
-            const logList = document.getElementById('logList');
-            logList.style.display = 'none';
-        });
+        // URLパラメータから編集モードをチェック
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('edit');
+        if (editId) {
+            this.handleEdit(editId);
+        }
     }
 
     handleEmotionSelect(type, emotion, button) {
@@ -116,23 +114,6 @@ class App {
             btn.classList.remove('selected');
         });
         this.render();
-    }
-
-    handleFilterChange(filter) {
-        // 現在のフィルターを更新
-        this.currentFilter = filter;
-        
-        // フィルターボタンのアクティブ状態を更新
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === filter);
-        });
-
-        // 記録一覧を表示
-        const logList = document.getElementById('logList');
-        logList.style.display = 'flex';
-
-        // ログ一覧を更新
-        this.renderLogs();
     }
 
     handleEdit(logId) {
@@ -217,90 +198,6 @@ class App {
         document.getElementById('difference').textContent = this.formatAmount(stats.difference);
     }
 
-    renderLogs() {
-        const logList = document.getElementById('logList');
-        const logs = this.storage.getLogs()
-            .filter(log => this.currentFilter === 'all' || log.type === this.currentFilter)
-            .sort((a, b) => new Date(b.date) - new Date(a));
-
-        logList.innerHTML = logs.map(log => `
-            <div class="log-item ${log.type}">
-                <div class="log-content">
-                    <div class="log-header">
-                        <span class="log-date">${this.formatDate(log.date)}</span>
-                        <span class="log-amount">金額: ${this.formatAmount(log.amount)}</span>
-                    </div>
-                    <div class="log-meta">
-                        <span class="log-type">${log.type === 'saving' ? '節約' : '浪費'}</span>
-                        <span class="log-emotions">
-                            <span>選択前: ${this.getEmotionEmoji(log.beforeEmotion, 'before')}</span>
-                            <span>→ 選択後: ${this.getEmotionEmoji(log.afterEmotion, 'after')}</span>
-                        </span>
-                    </div>
-                    ${log.situations && log.situations.length > 0 ? `
-                        <div class="log-situations">
-                            シチュエーション: ${log.situations.map(situation => `
-                                <span class="situation-badge">${this.getSituationLabel(situation)}</span>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="log-note">メモ: ${log.note}</div>
-                    ${log.message ? `<div class="log-future-message">未来の自分へのメッセージ: ${log.message}</div>` : ''}
-                    ${(log.reflection || log.suggestion || log.encouragement) ? `
-                        <div class="log-ai-analysis">
-                            ${log.reflection ? `<div class="ai-reflection">振り返り: ${log.reflection}</div>` : ''}
-                            ${log.suggestion ? `<div class="ai-suggestion">改善提案: ${log.suggestion}</div>` : ''}
-                            ${log.encouragement ? `<div class="ai-encouragement">励まし: ${log.encouragement}</div>` : ''}
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="log-actions">
-                    <button class="edit-btn" onclick="app.handleEdit('${log.id}')">編集</button>
-                    <button class="delete-btn" onclick="app.handleDelete('${log.id}')">削除</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    getEmotionEmoji(emotion, type = 'before') {
-        // type: 'before' or 'after'
-        if (type === 'before') {
-            const emojis = {
-                happy: { emoji: '😊', text: '確信' },
-                stressed: { emoji: '😤', text: 'ストレス' },
-                tired: { emoji: '😫', text: '疲労' },
-                excited: { emoji: '🤩', text: '興奮' },
-                normal: { emoji: '😐', text: '何となく' }
-            };
-            const emotionData = emojis[emotion] || { emoji: '😐', text: '何となく' };
-            return `${emotionData.text}${emotionData.emoji}`;
-        } else {
-            const emojis = {
-                happy: { emoji: '😊', text: '満足' },
-                regret: { emoji: '😔', text: '後悔' },
-                relief: { emoji: '😌', text: '安心' },
-                guilty: { emoji: '😣', text: '罪悪感' },
-                normal: { emoji: '😐', text: '普通' }
-            };
-            const emotionData = emojis[emotion] || { emoji: '😐', text: '普通' };
-            return `${emotionData.text}${emotionData.emoji}`;
-        }
-    }
-
-    getSituationLabel(situation) {
-        const labels = {
-            commute: '通勤中',
-            night: '深夜',
-            tired: '疲労時',
-            ad: '広告を見た',
-            schedule: '予定がズレた',
-            hungry: '空腹時',
-            study: '学習時',
-            other: 'その他'
-        };
-        return labels[situation] || situation;
-    }
-
     initializeAI() {
         const aiSection = document.createElement('div');
         aiSection.id = 'aiAnalysis';
@@ -344,7 +241,6 @@ class App {
 
     render() {
         this.updateStats();
-        this.renderLogs();
         this.chartManager.updateCharts();
         this.updateAIAnalysis();
     }
