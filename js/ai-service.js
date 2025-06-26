@@ -36,7 +36,7 @@ class AIService {
       });
       
       if (!response.ok) {
-        throw new Error('傾向分析に失敗しました');
+        throw new Error('金銭感覚の分析に失敗しました');
       }
       
       const data = await response.json();

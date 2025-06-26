@@ -319,7 +319,7 @@ class App {
                 <h2>AI分析</h2>
                 <div class="ai-analysis-content">
                     <div class="analysis-section">
-                        <h3>傾向分析</h3>
+                        <h3>金銭感覚</h3>
                         <p>${analysis.trendAnalysis}</p>
                     </div>
                     <div class="analysis-section">
